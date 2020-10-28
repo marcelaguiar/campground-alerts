@@ -33,6 +33,7 @@ def main():
     discovered_campgrounds = {}
 
     for campground_id in target_campgrounds:
+        available_days = set()
         target_url = base_url + str(campground_id) + '/month'
 
         for unique_month in unique_months:
@@ -57,11 +58,7 @@ def main():
             # {"campsites": ..., "count": ...}
             campsites_dict = response_dict["campsites"]
 
-            discovered_campsites = {}
-
             for campsite_id in campsites_dict.keys():
-                discovered_days = []
-
                 campsite = campsites_dict[campsite_id]
                 availabilities = campsite["availabilities"]
 
@@ -79,18 +76,17 @@ def main():
                         
                         if status == "Available":
                             # Add discovered date to campsite
-                            discovered_days.append(formatted_date.date())
+                            available_days.add(formatted_date.date())
 
-                # Add any discovered dates to campsite dictionary
-                if discovered_days:
-                    discovered_campsites[campsite_id] = discovered_days
+            # Add any discovered dates to campground dictionary
+            if available_days:
+                discovered_campgrounds[campground_id] = available_days
 
-            # Add any discovered campsites to campground dictionary
-            if discovered_campsites:
-                discovered_campgrounds[campground_id] = discovered_campsites
-                
-    message = build_alert_message(discovered_campgrounds)
-    tweet.tweet_message(message)
+    if discovered_campgrounds:     
+        message = build_alert_message(discovered_campgrounds)
+        tweet.tweet_message(message)
+    else:
+        print("No availability found.")
 
 
 def get_unique_months(target_dates):
@@ -112,12 +108,10 @@ def build_alert_message(campgrounds):
 
     for campground_id in campgrounds:
         alert_message += ("Campground " + str(campground_id) + ", go to: https://www.recreation.gov/camping/campgrounds/" + str(campground_id) + "\n")
-        campsites = campgrounds[campground_id]
+        available_dates = campgrounds[campground_id]
 
-        for campsite_id in campsites:
-            alert_message += ("Campsite " + str(campsite_id) + ": ")            
-            alert_message += ", ".join([str(date) for date in campsites[campsite_id]])
-            alert_message += "\n"
+        alert_message += ("Available on following day(s): " + ", ".join([str(a) for a in list(available_dates)]))  
+        alert_message += "\n"
 
     return alert_message
 
