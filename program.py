@@ -2,6 +2,7 @@ import datetime
 import json
 import requests
 import time
+import tweet
 
 
 base_url = 'https://www.recreation.gov/api/camps/availability/campground/'
@@ -22,7 +23,6 @@ def main():
     # Set is used instead of list for faster lookup performance
     # Also we don't want repeats.
     target_dates = {
-        datetime.datetime(2020, 11, 12),
         datetime.datetime(2020, 11, 13),
         datetime.datetime(2020, 11, 14),
         datetime.datetime(2020, 11, 15)
@@ -90,7 +90,7 @@ def main():
                 discovered_campgrounds[campground_id] = discovered_campsites
                 
     message = build_alert_message(discovered_campgrounds)
-    dispatch_alert(message)
+    tweet.tweet_message(message)
 
 
 def get_unique_months(target_dates):
@@ -120,10 +120,6 @@ def build_alert_message(campgrounds):
             alert_message += "\n"
 
     return alert_message
-
-
-def dispatch_alert(message):
-    print(message)
 
 
 if __name__ == "__main__":
