@@ -20,7 +20,7 @@ def OAuth():
 
 # Tweet
 def tweet_message(message):
-    print(len(message))
+    #print(len(message))
     oauth = OAuth()
     api = tweepy.API(oauth)
 

@@ -25,8 +25,7 @@ def main():
     # Also we don't want repeats.
     target_dates = {
         datetime.datetime(2020, 11, 13),
-        datetime.datetime(2020, 11, 14),
-        #datetime.datetime(2020, 11, 15)
+        datetime.datetime(2020, 11, 14)
     }
 
     unique_months = get_unique_months(target_dates)
