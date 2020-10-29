@@ -28,6 +28,8 @@ def main():
         datetime.datetime(2020, 11, 14)
     }
 
+    print("Checking dates: " + ", ".join([str(a) for a in list(target_dates)]))
+
     unique_months = get_unique_months(target_dates)
 
     discovered_campgrounds = {}
@@ -40,7 +42,6 @@ def main():
             # ISO 8601 datetime format
             year = unique_month[0]
             month = unique_month[1]
-            
 
             date_param = datetime.datetime(
                 year=year,
@@ -64,7 +65,7 @@ def main():
 
                 for key in availabilities.keys():
                     iso_date = datetime.datetime.fromisoformat(key[:-1])
-                    #formatted_date = iso_date.date()
+
                     formatted_date = datetime.datetime(
                         iso_date.year,
                         iso_date.month,
@@ -75,10 +76,10 @@ def main():
                         status = availabilities[key]
                         
                         if status == "Available":
-                            # Add discovered date to campsite
+                            # Add discovered date to list
                             available_days.add(formatted_date.date())
 
-            # Add any discovered dates to campground dictionary
+            # Add discovered dates list to campground dictionary
             if available_days:
                 discovered_campgrounds[campground_id] = available_days
 
