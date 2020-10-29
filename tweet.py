@@ -1,6 +1,5 @@
 import os
 import tweepy
-import requests
 
 
 consumer_key = os.environ.get('twitter_consumer_key')
@@ -21,11 +20,11 @@ def OAuth():
 
 # Tweet
 def tweet_message(message):
+    print(len(message))
     oauth = OAuth()
     api = tweepy.API(oauth)
 
     try:
         api.update_status(status=message)
-        print()
     except Exception as e:
         print("ERROR: Failed to post status:\n" + str(e))

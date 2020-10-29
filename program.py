@@ -1,5 +1,6 @@
 import datetime
 import json
+import random
 import requests
 import time
 import tweet
@@ -25,7 +26,7 @@ def main():
     target_dates = {
         datetime.datetime(2020, 11, 13),
         datetime.datetime(2020, 11, 14),
-        datetime.datetime(2020, 11, 15)
+        #datetime.datetime(2020, 11, 15)
     }
 
     unique_months = get_unique_months(target_dates)
@@ -104,14 +105,15 @@ def get_unique_months(target_dates):
 
 
 def build_alert_message(campgrounds):
-    alert_message = ""
+    timestamp = datetime.datetime.now().replace(microsecond=0)
+    alert_message = str(timestamp) + "\n\n"
 
     for campground_id in campgrounds:
-        alert_message += ("Campground " + str(campground_id) + ", go to: https://www.recreation.gov/camping/campgrounds/" + str(campground_id) + "\n")
+        alert_message += ("Campground " + str(campground_id) + ": https://www.recreation.gov/camping/campgrounds/" + str(campground_id) + "\n")
         available_dates = campgrounds[campground_id]
 
-        alert_message += ("Available on following day(s): " + ", ".join([str(a) for a in list(available_dates)]))  
-        alert_message += "\n"
+        alert_message += ("Available: " + ", ".join([str(a) for a in list(available_dates)]))  
+        alert_message += "\n\n"
 
     return alert_message
 
